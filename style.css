@@ -2,47 +2,56 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'IM Fell English SC', serif;
 }
 
 body {
-    background-color: #1a1a1a;
-    background-image: radial-gradient(circle at center, #3b2818 0%, #120a05 100%);
+    background: radial-gradient(ellipse at 50% 35%, #0d0d1a 0%, #000000 75%);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    min-height: 100dvh;
     overflow: hidden;
     color: #e5d3b3;
+    font-family: 'IM Fell English SC', serif;
 }
 
+/* ── Lightning canvas (fondo, detrás de todo) ── */
+#lightning-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ── Contenedor principal ── */
 .book-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    z-index: 2;
+    padding: 14px;
+    gap: 16px;
     width: 100%;
-    padding: 20px;
 }
 
-.pirate-title {
-    font-family: 'Pirata One', cursive;
-    font-size: 3.5rem;
-    color: #d4af37;
-    margin-bottom: 30px;
-    text-shadow: 2px 2px 4px #000;
-    letter-spacing: 2px;
-}
-
+/* El libro: tamaño controlado por JS */
 .book {
-    width: 400px;
-    height: 600px;
+    flex-shrink: 0;
+    touch-action: none; /* permite gestos de PageFlip sin interferencia del browser */
 }
 
+/* ── Páginas ── */
 .page {
     background-color: #e5d3b3;
     background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
-    border: 1px solid #4a3219; /* Borde sutil para simular filo de papel viejo */
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5); /* Sombra interna para aspecto viejo */
+    border: 1px solid #4a3219;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
     overflow: hidden;
 }
 
@@ -60,7 +69,7 @@ body {
     height: 100%;
     object-fit: cover;
     object-position: center;
-    pointer-events: none; /* previene problemas de drag en la imagen al tirar de la esquina */
+    pointer-events: none;
 }
 
 .parchment {
@@ -71,98 +80,42 @@ body {
     padding: 20px;
 }
 
+/* ── Tipografía ── */
+.pirate-title {
+    font-family: 'Pirata One', cursive;
+    font-size: clamp(1.3rem, 4.5vw, 3rem);
+    color: #4a3219;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.4);
+    margin-bottom: 14px;
+}
+
 .end-text {
     font-family: 'Pirata One', cursive;
-    font-size: 2.5rem;
+    font-size: clamp(1rem, 3.5vw, 2.5rem);
     color: #4a3219;
+    line-height: 1.4;
 }
 
-.controls {
-    margin-top: 40px;
-    display: flex;
-    gap: 20px;
-}
-
-.pirate-btn {
-    background-color: #8b5a2b;
-    background-image: linear-gradient(to bottom, #8b5a2b, #5c3a21);
-    color: #ffd700;
-    border: 2px solid #3e2723;
-    padding: 10px 20px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: all 0.2s;
-    font-family: 'Pirata One', cursive;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-    text-shadow: 1px 1px 2px #000;
-}
-
-.pirate-btn:hover {
-    background-color: #a06e3b;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.6);
-}
-
-.pirate-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-/* Ajustes Responsivos */
-@media (min-width: 800px) {
-    .book {
-        width: 400px;
-        height: 600px;
-        /* Cuando estamos en PC, abrimos el libro al centro */
-    }
-}
-
-/* --- Efecto de Portada Antigua --- */
-#f1 {
-    position: relative;
-}
-
+/* ── Portadas ── */
 .book-cover-bg {
     width: 100%;
     height: 100%;
     object-fit: fill;
-    /* fill asegura que la imagen se estire y encaje perfectamente viéndose entera */
     filter: contrast(1.1) brightness(0.9);
 }
 
-/* Información del bar sobre el libro */
 .cover-info-overlay {
     position: absolute;
-    top: auto;
-    bottom: 18%;
     left: 0;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
     text-align: center;
-    z-index: 1;
-    padding: 20px;
+    z-index: 3;
+    padding: 12px;
     color: #e5c158;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9);
-}
-
-.logo-encima {
-    width: 90px;
-    height: 90px;
-    object-fit: cover;
-    border-radius: 50%;
-    
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
-    border: 3px solid rgba(229, 193, 88, 0.8);
-
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
 }
 
 .logo-fondo-marca {
@@ -172,44 +125,47 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.6; /* Lo suficientemente visible como para verse como la portada, pero permite leer el fuego y PIRATA CODEX bajo él */
-    mix-blend-mode: overlay; /* Permite que el logo se bañe e integre con los tonos de la madera y el fuego debajo */
+    mix-blend-mode: overlay;
     pointer-events: none;
-    z-index: 2; /* Sobre las llamas pero bajo la información */
+    z-index: 2;
+}
+
+.location-info {
+    font-family: 'IM Fell English SC', serif;
+    font-size: clamp(0.58rem, 1.6vw, 0.85rem);
+    font-weight: bold;
+    background-color: rgba(20, 10, 0, 0.87);
+    padding: 5px 10px;
+    border: 1px solid #e5c158;
+    border-radius: 6px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
+    line-height: 1.35;
+}
+
+.logo-encima {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
+    border: 3px solid rgba(229, 193, 88, 0.8);
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
 }
 
 .bar-logo {
     width: 70%;
-    /* Escala la imagen del logo */
     max-height: 50%;
     object-fit: contain;
     border-radius: 12px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
     border: 2px solid rgba(229, 193, 88, 0.5);
-    /* Borde dorado tenue */
-    /* mix-blend-mode: multiply; Opcional si el logo tiene fondo blanco o feo que opaque el fuego */
 }
 
-.bar-title {
-    font-family: 'Pirata One', cursive;
-    font-size: 3.5rem;
-    margin-bottom: 20px;
-    letter-spacing: 2px;
-}
-
-.location-info {
-    font-family: 'IM Fell English SC', serif;
-    font-size: 0.85rem;
-    font-weight: bold;
-    background-color: rgba(20, 10, 0, 0.85); /* Un poco más oscuro para asegurar legibilidad al ser más pequeño */
-    padding: 6px 10px; /* Menos relleno para achicar la caja */
-    border: 1px solid #e5c158;
-    border-radius: 6px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
-    line-height: 1.2; /* Menor interlineado */
-}
-
-/* Efecto animado de parpadeo de Fuego para complementar la imagen */
+/* ── Efecto fuego en portadas ── */
 .fire-flames {
     position: absolute;
     bottom: 0;
@@ -224,29 +180,93 @@ body {
 }
 
 @keyframes fire-flicker {
-
-    0%,
-    100% {
+    0%, 100% {
         opacity: 0.8;
         box-shadow: inset 0 -30px 50px rgba(255, 69, 0, 0.6);
         background: radial-gradient(circle at bottom, rgba(255, 100, 0, 0.5) 0%, transparent 60%);
     }
-
     25% {
         opacity: 1;
         box-shadow: inset 0 -50px 70px rgba(255, 30, 0, 0.8);
         background: radial-gradient(circle at bottom, rgba(255, 80, 0, 0.6) 0%, transparent 65%);
     }
-
     50% {
         opacity: 0.9;
         box-shadow: inset 0 -45px 60px rgba(255, 140, 0, 0.7);
         background: radial-gradient(circle at bottom, rgba(255, 120, 0, 0.7) 0%, transparent 55%);
     }
-
     75% {
         opacity: 0.7;
         box-shadow: inset 0 -35px 45px rgba(255, 40, 0, 0.5);
         background: radial-gradient(circle at bottom, rgba(255, 90, 0, 0.4) 0%, transparent 50%);
+    }
+}
+
+/* ── Controles de navegación ── */
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.pirate-btn {
+    background: linear-gradient(to bottom, #8b5a2b, #5c3a21);
+    color: #ffd700;
+    border: 2px solid #3e2723;
+    padding: 10px 20px;
+    font-size: clamp(0.82rem, 2.4vw, 1.15rem);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-family: 'Pirata One', cursive;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.65), 0 0 12px rgba(200, 150, 0, 0.18);
+    text-shadow: 1px 1px 2px #000;
+    min-height: 44px;
+    min-width: 100px;
+    letter-spacing: 1px;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+.pirate-btn:hover {
+    background: linear-gradient(to bottom, #a06e3b, #7a4e2d);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.75), 0 0 18px rgba(200, 150, 0, 0.38);
+}
+
+.pirate-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.page-counter {
+    font-family: 'Pirata One', cursive;
+    color: #d4af37;
+    font-size: clamp(0.78rem, 2.2vw, 1rem);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9), 0 0 8px rgba(212, 175, 55, 0.35);
+    min-width: 60px;
+    text-align: center;
+    white-space: nowrap;
+    letter-spacing: 1px;
+}
+
+/* ── Sombra dramática del libro en desktop ── */
+@media (min-width: 768px) {
+    .book-container {
+        filter: drop-shadow(0 0 50px rgba(80, 40, 0, 0.4));
+    }
+}
+
+/* ── Móvil: ajustes de espaciado ── */
+@media (max-width: 767px) {
+    .book-container {
+        padding: 10px;
+        gap: 12px;
+    }
+
+    .pirate-btn {
+        padding: 10px 16px;
+        min-width: 90px;
     }
 }
