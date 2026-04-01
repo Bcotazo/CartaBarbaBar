@@ -146,23 +146,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const nextBtn     = document.getElementById('next-btn');
     const pageCounter = document.getElementById('page-counter');
 
-    const TAB_H = window.innerWidth < 768 ? 36 : 44; // altura de tabs sobre el libro
-
     function computeDimensions() {
-        const vw      = window.innerWidth;
-        const vh      = window.innerHeight;
-        const mobile  = vw < 768;
-        const ratio   = 1.5;
+        const vw     = window.innerWidth;
+        const vh     = window.innerHeight;
+        const mobile = vw < 768;
+        const ratio  = 1.5;
 
         if (mobile) {
-            const maxW = Math.min(vw - 28, 400);
-            const maxH = vh - TAB_H - 130; // tabs + controles + padding
+            const maxW   = Math.min(vw - 28, 400);
+            const maxH   = vh - 52 - 120; // 52px tabs + 120px controles+padding
             let w = Math.min(maxW, maxH / ratio);
             let h = w * ratio;
             return { width: Math.floor(w), height: Math.floor(h), portrait: true };
         } else {
-            const availW = vw - 80;
-            const availH = vh - TAB_H - 130; // tabs + controles + padding
+            const availW = vw - 80 - 82; // 82px reservados para tabs laterales
+            const availH = vh - 130;     // controles + padding
             let pageW = Math.min(Math.floor(availW / 2), 450);
             let pageH = Math.min(Math.floor(pageW * ratio), availH);
             pageW     = Math.min(pageW, Math.floor(pageH / ratio));
@@ -195,14 +193,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const totalPages = document.querySelectorAll('.page').length;
     const allTabs    = document.querySelectorAll('.book-tab');
 
+    const bookScene = document.querySelector('.book-scene');
+
     function updateUI() {
         const idx = pageFlip.getCurrentPageIndex();
         pageCounter.textContent = `${idx + 1} / ${totalPages}`;
 
-        // Resalta el tab correspondiente a la página actual
+        // Tabs laterales (desktop): solo visibles cuando el libro está abierto (no portada)
+        bookScene.classList.toggle('book-open', idx > 0);
+
+        // Resalta el tab de la sección actual
         allTabs.forEach(tab => {
             const tp = parseInt(tab.dataset.page);
-            // Activo si la página del tab está en el spread visible
             const inSpread = dims.portrait
                 ? tp === idx
                 : (tp === idx || tp === idx + 1);

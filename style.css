@@ -38,11 +38,11 @@ body {
     width: 100%;
 }
 
-/* ── Escena del libro + tabs superiores ── */
+/* ── Escena del libro ── */
 .book-scene {
     position: relative;
-    /* Espacio para las etiquetas que sobresalen arriba */
-    padding-top: 44px;
+    /* Móvil: espacio para tabs superiores (base mobile-first) */
+    padding-top: 52px;
 }
 
 .book {
@@ -192,18 +192,21 @@ body {
 /* ══════════════════════════════════════════════════
    SEPARADORES TIPO CUADERNO — borde superior del libro
    ══════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════
+   TABS – BASE MOBILE (parte superior, texto vertical)
+   ══════════════════════════════════════════════════ */
 .book-tabs {
     position: absolute;
-    top: 0;                /* arriba del padding-top del book-scene */
+    top: 0;
     left: 0;
     width: 100%;
-    height: 44px;          /* espacio total: 34px sobresalen + 10px dentro del libro */
+    height: 60px;          /* 52px visibles + 8px dentro del libro */
     display: flex;
     flex-direction: row;
-    align-items: flex-end; /* los tabs se alinean al fondo = borde superior del libro */
+    align-items: flex-end;
     justify-content: space-around;
-    gap: 3px;
-    padding: 0 6px;
+    gap: 2px;
+    padding: 0 4px;
     z-index: 20;
     pointer-events: none;
 }
@@ -212,12 +215,11 @@ body {
     pointer-events: all;
     position: relative;
     flex: 1;
-    min-width: 22px;
-    max-width: 48px;
-    /* 34px visibles arriba + 10px solapan el borde del libro */
-    height: 44px;
+    min-width: 20px;
+    max-width: 28px;       /* ← estrecho para no desperdiciar espacio horizontal */
+    height: 60px;
 
-    /* Texto vertical: se lee de abajo hacia arriba */
+    /* Texto vertical de abajo hacia arriba */
     writing-mode: vertical-rl;
     text-orientation: mixed;
     transform: rotate(180deg);
@@ -226,15 +228,14 @@ body {
     background: linear-gradient(to bottom, #4a2208 0%, #6b3310 50%, #3a1805 100%);
     color: #d4a020;
     font-family: 'Pirata One', cursive;
-    font-size: clamp(0.38rem, 1vw, 0.5rem);
-    letter-spacing: 0.8px;
+    font-size: 0.55rem;    /* ← más grande y legible */
+    letter-spacing: 0.4px;
     text-transform: uppercase;
 
-    /* Esquinas redondeadas arriba (que en DOM es abajo por el rotate) = visual: arriba */
     border-radius: 0 0 5px 5px;
     border: 1px solid #8a5818;
-    border-top: 3px solid #b07820; /* línea dorada en la parte visible superior */
-    border-bottom: none;           /* sin borde en el lado que entra al libro */
+    border-top: 3px solid #b07820;
+    border-bottom: none;
 
     cursor: pointer;
     padding: 4px 2px 2px;
@@ -242,8 +243,6 @@ body {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
 
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
     box-shadow:
@@ -251,22 +250,20 @@ body {
         1px 0 3px rgba(0, 0, 0, 0.4),
         inset 0 2px 0 rgba(200, 150, 40, 0.15);
 
-    transition: all 0.16s ease;
+    transition: height 0.16s ease, background 0.16s ease, color 0.16s ease;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
 }
 
-/* Textura de vetas de cuero */
+/* Textura de cuero */
 .book-tab::before {
     content: '';
     position: absolute;
     inset: 0;
     background: repeating-linear-gradient(
         0deg,
-        transparent 0px,
-        transparent 5px,
-        rgba(0, 0, 0, 0.05) 5px,
-        rgba(0, 0, 0, 0.05) 6px
+        transparent 0px, transparent 5px,
+        rgba(0, 0, 0, 0.05) 5px, rgba(0, 0, 0, 0.05) 6px
     );
     pointer-events: none;
 }
@@ -274,26 +271,90 @@ body {
 .book-tab:hover {
     background: linear-gradient(to bottom, #6b3810 0%, #9a5020 50%, #5a2a0a 100%);
     color: #ffd700;
-    height: 50px; /* sube un poco al hacer hover */
+    height: 66px;
     border-top-color: #ffd700;
-    box-shadow:
-        -1px -4px 8px rgba(0, 0, 0, 0.6),
-        inset 0 2px 0 rgba(255, 210, 80, 0.25);
 }
 
-.book-tab:active {
-    height: 42px;
-}
+.book-tab:active { height: 56px; }
 
 .book-tab.active {
     background: linear-gradient(to bottom, #7a4215 0%, #b06025 50%, #6a3010 100%);
     color: #ffd700;
     border-top-color: #ffd700;
-    height: 48px; /* destaca un poco más */
+    height: 64px;
     box-shadow:
         -1px -3px 7px rgba(0, 0, 0, 0.5),
         inset 0 2px 0 rgba(255, 220, 80, 0.3),
         0 0 8px rgba(200, 150, 0, 0.25);
+}
+
+/* ══════════════════════════════════════════════════
+   TABS – DESKTOP (lateral derecho, aparecen al abrir)
+   ══════════════════════════════════════════════════ */
+@media (min-width: 768px) {
+    .book-tabs {
+        /* Reubicar: borde derecho del libro, disposición vertical */
+        top: 5%;
+        left: 100%;        /* empieza en el borde derecho del libro */
+        width: 78px;
+        height: 90%;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: flex-start;
+        gap: 0;
+        padding: 0;
+
+        /* Oculto por defecto — aparece cuando el libro está abierto */
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(8px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Visible cuando el libro está abierto (no en portada) */
+    .book-scene.book-open .book-tabs {
+        opacity: 1;
+        pointer-events: all;
+        transform: translateX(0);
+    }
+
+    /* Resetear el estilo vertical y aplicar horizontal para derecha */
+    .book-tab {
+        writing-mode: horizontal-tb;
+        text-orientation: initial;
+        transform: none;
+        flex: none;
+        min-width: 0;
+        max-width: none;
+        width: 76px;
+        height: 21px;
+        font-size: 0.52rem;
+        letter-spacing: 0.5px;
+
+        border-radius: 0 5px 5px 0;
+        border: 1px solid #8a5818;
+        border-left: 3px solid #b07820;
+        border-top: 1px solid #8a5818;
+        border-bottom: 1px solid #8a5818;
+
+        padding: 0 5px 0 4px;
+    }
+
+    .book-tab:hover {
+        transform: translateX(5px);
+        height: 21px;    /* sobreescribe hover mobile */
+        border-left-color: #ffd700;
+        color: #ffd700;
+    }
+
+    .book-tab:active { transform: translateX(2px); height: 21px; }
+
+    .book-tab.active {
+        height: 21px;       /* sobreescribe active mobile */
+        border-left-color: #ffd700;
+        color: #ffd700;
+        background: linear-gradient(to right, #5c2e10 0%, #9b5c2a 60%, #7a4218 100%);
+    }
 }
 
 /* ── Controles de navegación ── */
@@ -415,6 +476,8 @@ body {
 /* ── Desktop ── */
 @media (min-width: 768px) {
     .book-scene {
+        padding-top: 0;        /* sin tabs arriba */
+        margin-right: 82px;    /* espacio para tabs laterales */
         filter: drop-shadow(0 0 35px rgba(80, 40, 0, 0.45))
                 drop-shadow(0 20px 50px rgba(0, 0, 0, 0.9));
     }
@@ -425,25 +488,6 @@ body {
     .book-container {
         padding: 10px;
         gap: 10px;
-    }
-
-    .book-scene {
-        padding-top: 36px; /* tabs más pequeños en móvil */
-    }
-
-    .book-tabs {
-        height: 36px;
-    }
-
-    .book-tab {
-        height: 36px;
-        font-size: 0.36rem;
-        letter-spacing: 0.5px;
-    }
-
-    .book-tab:hover,
-    .book-tab.active {
-        height: 40px;
     }
 
     .pirate-btn {
