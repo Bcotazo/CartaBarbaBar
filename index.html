@@ -211,19 +211,58 @@
 
             </div><!-- /book -->
 
-            <!-- ── Separadores tipo libro pegados al borde superior ── -->
-            <nav class="book-tabs" id="book-tabs">
-                <button class="book-tab" data-page="1">Historia</button>
-                <button class="book-tab" data-page="2">Cócteles</button>
-                <button class="book-tab" data-page="3">Cervezas</button>
-                <button class="book-tab" data-page="4">Artesanal</button>
-                <button class="book-tab" data-page="6">Jarras</button>
-                <button class="book-tab" data-page="7">Aguard.</button>
-                <button class="book-tab" data-page="8">Whisky</button>
-                <button class="book-tab" data-page="9">Brandy</button>
-                <button class="book-tab" data-page="10">Ron</button>
-                <button class="book-tab" data-page="11">Shots</button>
-                <button class="book-tab" data-page="14">Parches</button>
+            <!-- ── Sellos de Navegación Pirata ── -->
+            <nav class="seal-nav" id="seal-nav">
+
+                <button class="seal-arrow" id="seal-prev" aria-label="Categorías anteriores">
+                    <svg viewBox="0 0 42 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="1,10 14,4 14,16"/>
+                        <rect x="13" y="1" width="4" height="18" rx="1"/>
+                        <rect x="17" y="6" width="15" height="8" rx="3"/>
+                        <ellipse cx="36" cy="10" rx="5" ry="5"/>
+                    </svg>
+                </button>
+
+                <div class="seal-track-wrapper">
+                    <div class="seal-track" id="seal-track">
+
+                        <button class="seal-btn" data-page="1">
+                            <span class="seal-icon">⚓</span>
+                            <span class="seal-label">Historia</span>
+                        </button>
+
+                        <button class="seal-btn" data-page="2">
+                            <span class="seal-icon">🍹</span>
+                            <span class="seal-label">Cócteles</span>
+                        </button>
+
+                        <button class="seal-btn" data-page="3">
+                            <span class="seal-icon">🍺</span>
+                            <span class="seal-label">Cervezas</span>
+                        </button>
+
+                        <button class="seal-btn" data-page="7">
+                            <span class="seal-icon">💀</span>
+                            <span class="seal-label">Licores</span>
+                        </button>
+
+                        <button class="seal-btn" data-page="14">
+                            <span class="seal-icon">☠</span>
+                            <span class="seal-label">Parches</span>
+                        </button>
+
+                    </div>
+                </div>
+
+                <button class="seal-arrow" id="seal-next" aria-label="Siguientes categorías">
+                    <svg viewBox="0 0 42 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="41,10 28,4 28,16"/>
+                        <rect x="25" y="1" width="4" height="18" rx="1"/>
+                        <rect x="10" y="6" width="15" height="8" rx="3"/>
+                        <ellipse cx="6" cy="10" rx="5" ry="5"/>
+                    </svg>
+                </button>
+
             </nav>
 
         </div><!-- /book-scene -->

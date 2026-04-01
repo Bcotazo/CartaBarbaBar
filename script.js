@@ -189,42 +189,67 @@ document.addEventListener('DOMContentLoaded', function () {
 
     pageFlip.loadFromHTML(document.querySelectorAll('.page'));
 
-    // ── Contador y tabs activos ──────────────────────
+    // ── Contador y seal nav ──────────────────────────
     const totalPages = document.querySelectorAll('.page').length;
-    const allTabs    = document.querySelectorAll('.book-tab');
+    const bookScene  = document.querySelector('.book-scene');
 
-    const bookScene = document.querySelector('.book-scene');
+    // Sellos
+    const sealBtns  = document.querySelectorAll('.seal-btn');
+    const sealTrack = document.getElementById('seal-track');
+    const sealPrev  = document.getElementById('seal-prev');
+    const sealNext  = document.getElementById('seal-next');
+
+    // Páginas que pertenecen a cada sello (índice 0-based de PageFlip)
+    const sealPages = [
+        [1],                    // ⚓ Historia
+        [2, 11, 12],            // 🍹 Cócteles + Shots + Bebidas
+        [3, 4, 5, 6],           // 🍺 Cervezas + Artesanales + Cósmica + Jarras
+        [7, 8, 9, 10, 13],      // 💀 Licores (Aguard. Whisky Brandy Ron Varios)
+        [14, 15, 16, 17]        // ☠  Parches + Redes + Frase + Contratapa
+    ];
+
+    const SEAL_STEP  = 78;  // 68px sello + 10px gap
+    const MAX_OFFSET = Math.max(0, sealBtns.length - 3);
+    let   sealOffset = 0;
+
+    function updateSealArrows() {
+        if (sealPrev) sealPrev.disabled = sealOffset === 0;
+        if (sealNext) sealNext.disabled = sealOffset >= MAX_OFFSET;
+    }
+
+    function slideSeal(dir) {
+        sealOffset = Math.max(0, Math.min(MAX_OFFSET, sealOffset + dir));
+        if (sealTrack) sealTrack.style.transform = `translateX(-${sealOffset * SEAL_STEP}px)`;
+        updateSealArrows();
+    }
+
+    function updateSealActive(idx) {
+        sealBtns.forEach((btn, i) => {
+            btn.classList.toggle('active', sealPages[i].includes(idx));
+        });
+    }
+
+    sealBtns.forEach(btn => {
+        btn.addEventListener('click', () => pageFlip.flip(parseInt(btn.dataset.page)));
+    });
+
+    if (sealPrev) sealPrev.addEventListener('click', () => slideSeal(-1));
+    if (sealNext) sealNext.addEventListener('click', () => slideSeal(1));
+    updateSealArrows();
 
     function updateUI() {
         const idx = pageFlip.getCurrentPageIndex();
         pageCounter.textContent = `${idx + 1} / ${totalPages}`;
-
-        // Tabs laterales (desktop): solo visibles cuando el libro está abierto (no portada)
         bookScene.classList.toggle('book-open', idx > 0);
-
-        // Resalta el tab de la sección actual
-        allTabs.forEach(tab => {
-            const tp = parseInt(tab.dataset.page);
-            const inSpread = dims.portrait
-                ? tp === idx
-                : (tp === idx || tp === idx + 1);
-            tab.classList.toggle('active', inSpread);
-        });
+        updateSealActive(idx);
     }
 
     pageFlip.on('flip', updateUI);
     updateUI();
 
-    // ── Botones ──────────────────────────────────────
+    // ── Botones Anterior / Siguiente ─────────────────
     prevBtn.addEventListener('click', () => pageFlip.flipPrev());
     nextBtn.addEventListener('click', () => pageFlip.flipNext());
-
-    // ── Tabs de navegación ───────────────────────────
-    allTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            pageFlip.flip(parseInt(tab.dataset.page));
-        });
-    });
 
     // ── Swipe táctil ─────────────────────────────────
     let touchStartX = 0;

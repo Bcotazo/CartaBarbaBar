@@ -118,8 +118,8 @@ body {
 /* ── Escena del libro ── */
 .book-scene {
     position: relative;
-    /* Móvil: espacio para tabs superiores (base mobile-first) */
-    padding-top: 52px;
+    /* Espacio para el seal-nav superior */
+    padding-top: 84px;
 }
 
 .book {
@@ -267,172 +267,199 @@ body {
 }
 
 /* ══════════════════════════════════════════════════
-   SEPARADORES TIPO CUADERNO — borde superior del libro
+   SEAL NAVIGATION — sellos de lacre pirata
    ══════════════════════════════════════════════════ */
-/* ══════════════════════════════════════════════════
-   TABS – BASE MOBILE (parte superior, texto vertical)
-   ══════════════════════════════════════════════════ */
-.book-tabs {
+/* ── Contenedor principal del seal nav ── */
+.seal-nav {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 60px;          /* 52px visibles + 8px dentro del libro */
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-around;
-    gap: 2px;
-    padding: 0 4px;
-    z-index: 20;
-    pointer-events: none;
-}
-
-.book-tab {
-    pointer-events: all;
-    position: relative;
-    flex: 1;
-    min-width: 20px;
-    max-width: 28px;       /* ← estrecho para no desperdiciar espacio horizontal */
-    height: 60px;
-
-    /* Texto vertical de abajo hacia arriba */
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    transform: rotate(180deg);
-
-    /* Cuero envejecido */
-    background: linear-gradient(to bottom, #4a2208 0%, #6b3310 50%, #3a1805 100%);
-    color: #d4a020;
-    font-family: 'Pirata One', cursive;
-    font-size: 0.55rem;    /* ← más grande y legible */
-    letter-spacing: 0.4px;
-    text-transform: uppercase;
-
-    border-radius: 0 0 5px 5px;
-    border: 1px solid #8a5818;
-    border-top: 3px solid #b07820;
-    border-bottom: none;
-
-    cursor: pointer;
-    padding: 4px 2px 2px;
+    height: 84px;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
+    z-index: 20;
+    padding: 0 4px;
+}
+
+/* ── Dagas de navegación ── */
+.seal-arrow {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #b07820;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 0;
+    transition: color 0.2s, transform 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    filter: drop-shadow(0 0 4px rgba(180, 120, 20, 0.35));
+}
+
+.seal-arrow svg {
+    width: 38px;
+    height: 18px;
+    transition: filter 0.2s;
+}
+
+.seal-arrow:not(:disabled):hover {
+    color: #ffd700;
+    transform: scale(1.18);
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.65));
+}
+
+.seal-arrow:disabled {
+    opacity: 0.18;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* ── Ventana del carrusel ── */
+.seal-track-wrapper {
     overflow: hidden;
+    /* 3 sellos × 68px + 2 gaps × 10px */
+    width: calc(3 * 68px + 2 * 10px);
+    flex-shrink: 0;
+}
 
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+.seal-track {
+    display: flex;
+    gap: 10px;
+    transition: transform 0.4s cubic-bezier(0.35, 0, 0.25, 1);
+    will-change: transform;
+}
+
+/* ── Sello de lacre ── */
+.seal-btn {
+    flex-shrink: 0;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+
+    /* Cera seca: rojo carmesí profundo */
+    background: radial-gradient(circle at 38% 30%,
+        #6b1c1c 0%, #3a0808 52%, #1c0303 100%);
+
+    border: 2.5px solid rgba(140, 75, 15, 0.6);
+    color: #a06828;
+
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    font-family: 'Pirata One', cursive;
+
     box-shadow:
-        -1px -2px 5px rgba(0, 0, 0, 0.5),
-        1px 0 3px rgba(0, 0, 0, 0.4),
-        inset 0 2px 0 rgba(200, 150, 40, 0.15);
+        0 3px 10px rgba(0, 0, 0, 0.75),
+        0 1px 0 rgba(255, 180, 60, 0.07) inset,
+        0 -2px 5px rgba(0, 0, 0, 0.55) inset;
 
-    transition: height 0.16s ease, background 0.16s ease, color 0.16s ease;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s ease;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
 }
 
-/* Textura de cuero */
-.book-tab::before {
+/* Anillo interior del sello (grabado en cera) */
+.seal-btn::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-        0deg,
-        transparent 0px, transparent 5px,
-        rgba(0, 0, 0, 0.05) 5px, rgba(0, 0, 0, 0.05) 6px
-    );
+    inset: 5px;
+    border-radius: 50%;
+    border: 1px solid rgba(180, 75, 15, 0.3);
     pointer-events: none;
+    transition: border-color 0.25s;
 }
 
-.book-tab:hover {
-    background: linear-gradient(to bottom, #6b3810 0%, #9a5020 50%, #5a2a0a 100%);
-    color: #ffd700;
-    height: 66px;
-    border-top-color: #ffd700;
+/* Brillo de cera (reflejo superior) */
+.seal-btn::after {
+    content: '';
+    position: absolute;
+    top: 9px;
+    left: 15px;
+    width: 16px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgba(255, 200, 120, 0.07);
+    pointer-events: none;
+    transition: background 0.25s;
 }
 
-.book-tab:active { height: 56px; }
-
-.book-tab.active {
-    background: linear-gradient(to bottom, #7a4215 0%, #b06025 50%, #6a3010 100%);
-    color: #ffd700;
-    border-top-color: #ffd700;
-    height: 64px;
+.seal-btn:hover:not(.active) {
+    background: radial-gradient(circle at 38% 30%,
+        #8a2222 0%, #4d0c0c 52%, #250505 100%);
+    border-color: rgba(200, 110, 25, 0.85);
+    color: #c88030;
+    transform: translateY(-3px) scale(1.05);
     box-shadow:
-        -1px -3px 7px rgba(0, 0, 0, 0.5),
-        inset 0 2px 0 rgba(255, 220, 80, 0.3),
-        0 0 8px rgba(200, 150, 0, 0.25);
+        0 7px 16px rgba(0, 0, 0, 0.8),
+        0 1px 0 rgba(255, 180, 60, 0.1) inset,
+        0 -2px 5px rgba(0, 0, 0, 0.55) inset;
 }
 
-/* ══════════════════════════════════════════════════
-   TABS – DESKTOP (lateral derecho, aparecen al abrir)
-   ══════════════════════════════════════════════════ */
-@media (min-width: 768px) {
-    .book-tabs {
-        /* Reubicar: borde derecho del libro, disposición vertical */
-        top: 0;
-        left: 100%;        /* empieza en el borde derecho del libro */
-        width: 110px;
-        height: 100%;
-        flex-direction: column;
-        justify-content: stretch;
-        align-items: flex-start;
-        gap: 2px;
-        padding: 4px 0;
+/* Sello activo: oro fundido */
+.seal-btn.active {
+    background: radial-gradient(circle at 38% 30%,
+        #e8c547 0%, #b08818 45%, #6c5210 72%, #3a2c00 100%);
+    border-color: #ffd700;
+    color: #1a0c00;
 
-        /* Oculto por defecto — aparece cuando el libro está abierto */
-        opacity: 0;
+    transform: translateY(-3px) scale(1.12);
+
+    box-shadow:
+        0 0 0 2.5px rgba(255, 215, 0, 0.22),
+        0 0 18px rgba(212, 175, 55, 0.8),
+        0 0 36px rgba(212, 175, 55, 0.28),
+        0 5px 14px rgba(0, 0, 0, 0.65),
+        0 1px 0 rgba(255, 245, 160, 0.3) inset;
+}
+
+.seal-btn.active::before {
+    border-color: rgba(255, 225, 80, 0.45);
+}
+
+.seal-btn.active::after {
+    background: rgba(255, 252, 200, 0.14);
+}
+
+.seal-icon {
+    font-size: 1.55rem;
+    line-height: 1;
+    transition: transform 0.25s;
+}
+
+.seal-btn:hover .seal-icon,
+.seal-btn.active .seal-icon {
+    transform: scale(1.1);
+}
+
+.seal-label {
+    font-size: 0.44rem;
+    letter-spacing: 0.9px;
+    text-transform: uppercase;
+    line-height: 1;
+    font-weight: normal;
+}
+
+/* Desktop: mostrar los 5 sellos sin carrusel */
+@media (min-width: 520px) {
+    .seal-track-wrapper {
+        width: calc(5 * 68px + 4 * 10px);
+    }
+    .seal-arrow {
+        visibility: hidden;
         pointer-events: none;
-        transform: translateX(10px);
-        transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-
-    /* Visible cuando el libro está abierto (no en portada) */
-    .book-scene.book-open .book-tabs {
-        opacity: 1;
-        pointer-events: all;
-        transform: translateX(0);
-    }
-
-    /* Resetear el estilo vertical y aplicar horizontal para derecha */
-    .book-tab {
-        writing-mode: horizontal-tb;
-        text-orientation: initial;
-        transform: none;
-        flex: 1;
-        min-width: 0;
-        max-width: none;
-        width: 108px;
-        height: auto;
-        font-size: 0.75rem;
-        letter-spacing: 1px;
-
-        border-radius: 0 6px 6px 0;
-        border: 1px solid #8a5818;
-        border-left: 4px solid #b07820;
-        border-top: 1px solid #8a5818;
-        border-bottom: 1px solid #8a5818;
-
-        padding: 0 8px 0 6px;
-        display: flex;
-        align-items: center;
-    }
-
-    .book-tab:hover {
-        transform: translateX(6px);
-        height: auto;
-        border-left-color: #ffd700;
-        color: #ffd700;
-    }
-
-    .book-tab:active { transform: translateX(3px); }
-
-    .book-tab.active {
-        height: auto;
-        border-left-color: #ffd700;
-        color: #ffd700;
-        background: linear-gradient(to right, #5c2e10 0%, #9b5c2a 60%, #7a4218 100%);
     }
 }
 
