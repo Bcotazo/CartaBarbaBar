@@ -246,7 +246,7 @@
                 setTimeout(() => overlay.remove(), 800);
             }
 
-            video.addEventListener('ended', dismiss);
+            video.addEventListener('ended', () => setTimeout(dismiss, 1500));
             skipBtn.addEventListener('click', dismiss);
         })();
     </script>
