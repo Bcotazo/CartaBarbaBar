@@ -146,6 +146,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const nextBtn     = document.getElementById('next-btn');
     const pageCounter = document.getElementById('page-counter');
 
+    const TAB_H = window.innerWidth < 768 ? 36 : 44; // altura de tabs sobre el libro
+
     function computeDimensions() {
         const vw      = window.innerWidth;
         const vh      = window.innerHeight;
@@ -154,13 +156,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (mobile) {
             const maxW = Math.min(vw - 28, 400);
-            const maxH = vh - 160; // espacio para chips + controles + padding
+            const maxH = vh - TAB_H - 130; // tabs + controles + padding
             let w = Math.min(maxW, maxH / ratio);
             let h = w * ratio;
             return { width: Math.floor(w), height: Math.floor(h), portrait: true };
         } else {
-            const availW = vw - 80 - 82; // 82 px reservados para tabs laterales
-            const availH = vh - 140;
+            const availW = vw - 80;
+            const availH = vh - TAB_H - 130; // tabs + controles + padding
             let pageW = Math.min(Math.floor(availW / 2), 450);
             let pageH = Math.min(Math.floor(pageW * ratio), availH);
             pageW     = Math.min(pageW, Math.floor(pageH / ratio));
@@ -191,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ── Contador y tabs activos ──────────────────────
     const totalPages = document.querySelectorAll('.page').length;
-    const allTabs    = document.querySelectorAll('.book-tab, .tab-chip');
+    const allTabs    = document.querySelectorAll('.book-tab');
 
     function updateUI() {
         const idx = pageFlip.getCurrentPageIndex();
