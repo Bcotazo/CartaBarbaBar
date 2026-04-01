@@ -281,4 +281,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }, { passive: true });
 
+    // ── Botones de redes sociales (PageFlip bloquea <a>, usamos data-href) ──
+    document.querySelectorAll('.social-btn[data-href]').forEach(btn => {
+        btn.addEventListener('mousedown', e => e.stopPropagation());
+        btn.addEventListener('touchstart', e => e.stopPropagation(), { passive: true });
+        btn.addEventListener('click', () => window.open(btn.dataset.href, '_blank', 'noopener'));
+    });
+
 });

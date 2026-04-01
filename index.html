@@ -152,36 +152,53 @@
                         <img src="Imagenes/Logo.jpg"
                             style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.1;mix-blend-mode:multiply;pointer-events:none;z-index:0;"
                             alt="Fondo">
-                        <div style="z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;">
-                            <h2 class="pirate-title" style="font-size:clamp(1.1rem,4vw,1.8rem);margin:0 0 4px;">¡Únete a la Tripulación!</h2>
+                        <div style="z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:18px;width:100%;">
+                            <h2 class="pirate-title" style="font-size:clamp(1.3rem,5vw,2rem);margin:0;">¡Únete a la Tripulación!</h2>
 
-                            <a href="https://www.instagram.com/barbabarrock11?igsh=ejV1cmlsdzRoMWdq" target="_blank" rel="noopener" class="social-btn social-btn--ig">
-                                <span class="social-btn__icon">📷</span>
+                            <!-- Los data-href son leídos por JS para esquivar el bloqueo de PageFlip -->
+                            <div class="social-btn social-btn--ig" data-href="https://www.instagram.com/barbabarrock11?igsh=ejV1cmlsdzRoMWdq">
+                                <div class="social-btn__coin social-coin--ig">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect x="2" y="2" width="20" height="20" rx="6" stroke="currentColor" stroke-width="2"/>
+                                        <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="2"/>
+                                        <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/>
+                                        <!-- daga pirata superpuesta -->
+                                        <line x1="4" y1="20" x2="8" y2="16" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
                                 <span class="social-btn__text">
                                     <strong>Instagram</strong>
                                     <small>@barbabarrock11</small>
                                 </span>
-                            </a>
+                            </div>
 
-                            <a href="https://www.facebook.com/share/1DaJjvNNGn/" target="_blank" rel="noopener" class="social-btn social-btn--fb">
-                                <span class="social-btn__icon">📘</span>
+                            <div class="social-btn social-btn--fb" data-href="https://www.facebook.com/share/1DaJjvNNGn/">
+                                <div class="social-btn__coin social-coin--fb">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                                        <!-- ancla pirata superpuesta -->
+                                        <line x1="4" y1="20" x2="7" y2="17" stroke="white" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+                                    </svg>
+                                </div>
                                 <span class="social-btn__text">
                                     <strong>Facebook</strong>
                                     <small>Barba Bar Oficial</small>
                                 </span>
-                            </a>
+                            </div>
 
-                            <a href="https://wa.me/573003580572?text=Hola%2C%20quiero%20hacer%20una%20reserva%20en%20Barba%20Bar" target="_blank" rel="noopener" class="social-btn social-btn--wa">
-                                <span class="social-btn__icon">🟢</span>
+                            <div class="social-btn social-btn--wa" data-href="https://wa.me/573003580572?text=Hola%2C%20quiero%20hacer%20una%20reserva%20en%20Barba%20Bar">
+                                <div class="social-btn__coin social-coin--wa">
+                                    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                                        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.528 5.85L0 24l6.337-1.508A11.933 11.933 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.88 0-3.645-.49-5.18-1.348l-.37-.217-3.762.895.951-3.666-.24-.386A9.937 9.937 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+                                    </svg>
+                                </div>
                                 <span class="social-btn__text">
                                     <strong>Reservas</strong>
                                     <small>+57 300 3580572</small>
                                 </span>
-                            </a>
+                            </div>
 
-                            <img src="Imagenes/Logo.jpg"
-                                style="width:clamp(50px,12vw,72px);height:clamp(50px,12vw,72px);border-radius:50%;outline:3px solid #4a3219;box-shadow:0 5px 15px rgba(0,0,0,0.5);margin-top:4px;"
-                                alt="Logo Redes">
                         </div>
                         <div class="fire-flames"></div>
                     </div>
