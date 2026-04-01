@@ -2,76 +2,84 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ════════════════════════════════════════════════
     //  RAYOS ANIMADOS EN EL FONDO
+    //  – Flash rápido → se mantiene brillante → fade suave
     // ════════════════════════════════════════════════
 
     const canvas = document.getElementById('lightning-bg');
     const ctx = canvas.getContext('2d');
 
     function resizeCanvas() {
-        canvas.width = window.innerWidth;
+        canvas.width  = window.innerWidth;
         canvas.height = window.innerHeight;
     }
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Genera segmentos de rayo mediante desplazamiento de punto medio
-    function generateBolt(segments, x1, y1, x2, y2, spread, depth) {
+    // Genera segmentos por desplazamiento de punto medio (ramificado)
+    function generateBolt(segs, x1, y1, x2, y2, spread, depth) {
         if (depth === 0 || spread < 2) {
-            segments.push([x1, y1, x2, y2]);
+            segs.push([x1, y1, x2, y2]);
             return;
         }
         const mx = (x1 + x2) / 2 + (Math.random() - 0.5) * spread;
-        const my = (y1 + y2) / 2 + (Math.random() - 0.5) * spread * 0.22;
-        generateBolt(segments, x1, y1, mx, my, spread / 2, depth - 1);
-        generateBolt(segments, mx, my, x2, y2, spread / 2, depth - 1);
-        // Ramas secundarias aleatorias
-        if (depth > 3 && Math.random() < 0.38) {
-            const ex = mx + (Math.random() - 0.5) * spread * 1.4;
+        const my = (y1 + y2) / 2 + (Math.random() - 0.5) * spread * 0.2;
+        generateBolt(segs, x1, y1, mx, my, spread / 2, depth - 1);
+        generateBolt(segs, mx, my, x2, y2, spread / 2, depth - 1);
+        // Rama secundaria
+        if (depth > 3 && Math.random() < 0.4) {
+            const ex = mx + (Math.random() - 0.5) * spread * 1.5;
             const ey = my + spread * (0.3 + Math.random() * 0.9);
-            generateBolt(segments, mx, my, ex, ey, spread / 3, depth - 3);
+            generateBolt(segs, mx, my, ex, ey, spread / 3, depth - 3);
         }
     }
 
-    let ltAlpha = 0;
-    let ltSegments = [];
-    let ltAnimating = false;
+    let ltAlpha      = 0;
+    let ltPhase      = 'idle'; // 'hold' | 'fade'
+    let ltHoldLeft   = 0;
+    let ltSegs       = [];
+    let ltAnimating  = false;
 
     function triggerLightning() {
-        ltSegments = [];
-        const w = canvas.width;
-        const h = canvas.height;
-        const sx = w * (0.15 + Math.random() * 0.7);
-        const ex = sx + (Math.random() - 0.5) * w * 0.32;
-        const ey = h * (0.25 + Math.random() * 0.55);
-        generateBolt(ltSegments, sx, -10, ex, ey, 130, 8);
-        ltAlpha = 1.0;
+        ltSegs = [];
+        const w  = canvas.width;
+        const h  = canvas.height;
+        const sx = w * (0.08 + Math.random() * 0.84);
+        const ex = sx + (Math.random() - 0.5) * w * 0.42;
+        const ey = h * (0.2  + Math.random() * 0.62);
+        generateBolt(ltSegs, sx, -10, ex, ey, 145, 8);
+
+        ltAlpha    = 1.0;
+        ltPhase    = 'hold';
+        ltHoldLeft = 10 + Math.floor(Math.random() * 10); // 10-20 frames (~165-330 ms a 60fps)
+
         if (!ltAnimating) {
             ltAnimating = true;
             animateLightning();
         }
-        // 30 % de probabilidad de doble destello
-        if (Math.random() < 0.3) {
-            setTimeout(triggerLightning, 80 + Math.random() * 130);
+
+        // 38 % de probabilidad de destello secundario inmediato
+        if (Math.random() < 0.38) {
+            setTimeout(triggerLightning, 55 + Math.random() * 110);
         }
     }
 
-    function drawLightningFrame() {
+    function drawFrame() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         if (ltAlpha <= 0) return;
 
-        // Flash tenue de fondo
-        ctx.fillStyle = `rgba(155, 185, 255, ${ltAlpha * 0.032})`;
+        // Flash de fondo sutil
+        ctx.fillStyle = `rgba(148, 178, 255, ${ltAlpha * 0.028})`;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.save();
         ctx.lineCap = 'round';
 
         // Halo exterior
-        ctx.lineWidth = 5;
+        ctx.lineWidth   = 5;
         ctx.strokeStyle = `rgba(80, 120, 255, ${ltAlpha * 0.22})`;
-        ctx.shadowColor = '#3355ff';
-        ctx.shadowBlur = 28;
-        for (const [x1, y1, x2, y2] of ltSegments) {
+        ctx.shadowColor = '#3355ee';
+        ctx.shadowBlur  = 30;
+        for (const [x1, y1, x2, y2] of ltSegs) {
             ctx.beginPath();
             ctx.moveTo(x1, y1);
             ctx.lineTo(x2, y2);
@@ -79,11 +87,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Núcleo brillante
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth   = 1.5;
         ctx.strokeStyle = `rgba(215, 228, 255, ${ltAlpha})`;
         ctx.shadowColor = '#ffffff';
-        ctx.shadowBlur = 10;
-        for (const [x1, y1, x2, y2] of ltSegments) {
+        ctx.shadowBlur  = 10;
+        for (const [x1, y1, x2, y2] of ltSegs) {
             ctx.beginPath();
             ctx.moveTo(x1, y1);
             ctx.lineTo(x2, y2);
@@ -94,102 +102,127 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function animateLightning() {
-        drawLightningFrame();
-        ltAlpha -= 0.065;
-        if (ltAlpha > 0) {
+        if (ltPhase === 'hold') {
+            // Mantiene brillo con leve parpadeo
+            ltAlpha = 0.88 + Math.random() * 0.16;
+            drawFrame();
+            ltHoldLeft--;
+            if (ltHoldLeft <= 0) {
+                ltPhase = 'fade';
+                ltAlpha = 0.88;
+            }
             requestAnimationFrame(animateLightning);
         } else {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ltAnimating = false;
+            // Fade suave
+            drawFrame();
+            ltAlpha -= 0.028;
+            if (ltAlpha > 0) {
+                requestAnimationFrame(animateLightning);
+            } else {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ltAnimating = false;
+            }
         }
     }
 
     function scheduleLightning() {
-        const delay = 3500 + Math.random() * 7500;
+        // Más frecuente: cada 1.2 – 3.8 segundos
+        const delay = 1200 + Math.random() * 2600;
         setTimeout(() => {
             triggerLightning();
             scheduleLightning();
         }, delay);
     }
 
-    // Primer rayo entre 1.5 y 3 segundos después de cargar
-    setTimeout(scheduleLightning, 1500 + Math.random() * 1500);
+    setTimeout(scheduleLightning, 800 + Math.random() * 800);
 
 
     // ════════════════════════════════════════════════
     //  LIBRO RESPONSIVO CON PAGE-FLIP
     // ════════════════════════════════════════════════
 
-    const book = document.getElementById('book');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
+    const book        = document.getElementById('book');
+    const prevBtn     = document.getElementById('prev-btn');
+    const nextBtn     = document.getElementById('next-btn');
     const pageCounter = document.getElementById('page-counter');
 
-    // Calcula las dimensiones óptimas de página según el viewport
     function computeDimensions() {
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        const isMobile = vw < 768;
-        const ratio = 1.5; // alto/ancho de página (600/400)
+        const vw      = window.innerWidth;
+        const vh      = window.innerHeight;
+        const mobile  = vw < 768;
+        const ratio   = 1.5;
 
-        if (isMobile) {
-            const hPad = 28;           // padding horizontal total
-            const vReserve = 130;      // espacio para controles + padding
-            const maxW = Math.min(vw - hPad, 400);
-            const maxH = vh - vReserve;
+        if (mobile) {
+            const maxW = Math.min(vw - 28, 400);
+            const maxH = vh - 160; // espacio para chips + controles + padding
             let w = Math.min(maxW, maxH / ratio);
             let h = w * ratio;
             return { width: Math.floor(w), height: Math.floor(h), portrait: true };
         } else {
-            const hPad = 80;
-            const vReserve = 130;
-            const availW = vw - hPad;
-            const availH = vh - vReserve;
-            // En escritorio el libro abre dos páginas: ancho total = 2 × pageW
+            const availW = vw - 80 - 82; // 82 px reservados para tabs laterales
+            const availH = vh - 140;
             let pageW = Math.min(Math.floor(availW / 2), 450);
             let pageH = Math.min(Math.floor(pageW * ratio), availH);
-            pageW = Math.min(pageW, Math.floor(pageH / ratio));
+            pageW     = Math.min(pageW, Math.floor(pageH / ratio));
             return { width: Math.floor(pageW), height: Math.floor(pageH), portrait: false };
         }
     }
 
-    const dims = computeDimensions();
+    const dims    = computeDimensions();
     const isMobile = window.innerWidth < 768;
 
-    // Establece tamaño inicial del contenedor para evitar saltos de layout
     book.style.width  = isMobile ? `${dims.width}px`      : `${dims.width * 2}px`;
     book.style.height = `${dims.height}px`;
 
     const pageFlip = new St.PageFlip(book, {
-        width:              dims.width,
-        height:             dims.height,
-        size:               'fixed',
-        maxShadowOpacity:   0.8,
-        showCover:          true,
+        width:               dims.width,
+        height:              dims.height,
+        size:                'fixed',
+        maxShadowOpacity:    0.75,
+        showCover:           true,
         mobileScrollSupport: false,
-        usePortrait:        dims.portrait,
-        useMouseEvents:     true,
-        startPage:          0
+        usePortrait:         dims.portrait,
+        useMouseEvents:      true,
+        startPage:           0,
+        flippingTime:        700   // flip más fluido y rápido (ms)
     });
 
     pageFlip.loadFromHTML(document.querySelectorAll('.page'));
 
-    // ── Contador de página ──────────────────────────
+    // ── Contador y tabs activos ──────────────────────
     const totalPages = document.querySelectorAll('.page').length;
+    const allTabs    = document.querySelectorAll('.book-tab, .tab-chip');
 
-    function updateCounter() {
+    function updateUI() {
         const idx = pageFlip.getCurrentPageIndex();
         pageCounter.textContent = `${idx + 1} / ${totalPages}`;
+
+        // Resalta el tab correspondiente a la página actual
+        allTabs.forEach(tab => {
+            const tp = parseInt(tab.dataset.page);
+            // Activo si la página del tab está en el spread visible
+            const inSpread = dims.portrait
+                ? tp === idx
+                : (tp === idx || tp === idx + 1);
+            tab.classList.toggle('active', inSpread);
+        });
     }
 
-    pageFlip.on('flip', updateCounter);
-    updateCounter();
+    pageFlip.on('flip', updateUI);
+    updateUI();
 
-    // ── Botones ─────────────────────────────────────
+    // ── Botones ──────────────────────────────────────
     prevBtn.addEventListener('click', () => pageFlip.flipPrev());
     nextBtn.addEventListener('click', () => pageFlip.flipNext());
 
-    // ── Deslizamiento táctil (swipe) en móvil ───────
+    // ── Tabs de navegación ───────────────────────────
+    allTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            pageFlip.flip(parseInt(tab.dataset.page));
+        });
+    });
+
+    // ── Swipe táctil ─────────────────────────────────
     let touchStartX = 0;
     let touchStartY = 0;
 
@@ -201,8 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
     book.addEventListener('touchend', (e) => {
         const dx = e.changedTouches[0].clientX - touchStartX;
         const dy = e.changedTouches[0].clientY - touchStartY;
-        // Solo actuar si es un swipe claramente horizontal y suficientemente largo
-        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 55) {
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
             if (dx < 0) pageFlip.flipNext();
             else        pageFlip.flipPrev();
         }
