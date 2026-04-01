@@ -199,13 +199,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const sealPrev  = document.getElementById('seal-prev');
     const sealNext  = document.getElementById('seal-next');
 
-    // Páginas que pertenecen a cada sello (índice 0-based de PageFlip)
+    // Páginas que pertenecen a cada sello (índice 0-based de PageFlip, orden estrictamente secuencial)
     const sealPages = [
-        [1],                    // ⚓ Historia
-        [2, 11, 12],            // 🍹 Cócteles + Shots + Bebidas
-        [3, 4, 5, 6],           // 🍺 Cervezas + Artesanales + Cósmica + Jarras
-        [7, 8, 9, 10, 13],      // 💀 Licores (Aguard. Whisky Brandy Ron Varios)
-        [14, 15, 16, 17]        // ☠  Parches + Redes + Frase + Contratapa
+        [1],                              // ⚓ Historia
+        [2],                              // 🍹 Cócteles
+        [3, 4, 5, 6],                     // 🍺 Cervezas + Artesanales + Cósmica + Jarras
+        [7, 8, 9, 10, 11, 12, 13],        // 💀 Licores (Aguard. Whisky Brandy Ron Shots Bebidas Varios)
+        [14, 15, 16, 17]                  // ☠  Parches + Redes + Frase + Contratapa
     ];
 
     const SEAL_STEP  = 82;  // 72px moneda + 10px gap
@@ -224,9 +224,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateSealActive(idx) {
+        let activeSealIdx = -1;
         sealBtns.forEach((btn, i) => {
-            btn.classList.toggle('active', sealPages[i].includes(idx));
+            const isActive = sealPages[i].includes(idx);
+            btn.classList.toggle('active', isActive);
+            if (isActive) activeSealIdx = i;
         });
+        // Auto-scroll carrusel si el sello activo quedó fuera de la ventana visible
+        if (activeSealIdx >= 0 && sealBtns.length > 3) {
+            const visibleEnd = sealOffset + 2;
+            if (activeSealIdx < sealOffset || activeSealIdx > visibleEnd) {
+                sealOffset = Math.max(0, Math.min(MAX_OFFSET, activeSealIdx - 1));
+                if (sealTrack) sealTrack.style.transform = `translateX(-${sealOffset * SEAL_STEP}px)`;
+                updateSealArrows();
+            }
+        }
     }
 
     sealBtns.forEach(btn => {

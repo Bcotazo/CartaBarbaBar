@@ -50,98 +50,98 @@
                 <!-- Página 2: Historia -->
                 <div class="page">
                     <div class="page-content">
-                        <img src="Imagenes/NuestraHistoria_page_1.jpg" alt="Historia">
+                        <img src="Imagenes/NuestraHistoria_page_1.jpg" alt="Historia" loading="lazy">
                     </div>
                 </div>
 
                 <!-- Página 3: Cócteles -->
                 <div class="page">
                     <div class="page-content">
-                        <img src="Imagenes/Cocteles_page_2.jpg" alt="Cócteles">
+                        <img src="Imagenes/Cocteles_page_2.jpg" alt="Cócteles" loading="lazy">
                     </div>
                 </div>
 
                 <!-- Página 4: Cervezas -->
                 <div class="page">
                     <div class="page-content">
-                        <img src="Imagenes/Cervezas_page_3.jpg" alt="Cervezas">
+                        <img src="Imagenes/Cervezas_page_3.jpg" alt="Cervezas" loading="lazy">
                     </div>
                 </div>
 
                 <!-- Página 5: Artesanales -->
                 <div class="page">
                     <div class="page-content">
-                        <img src="Imagenes/CervezasArtesanales_page_4.jpg" alt="Cervezas Artesanales">
+                        <img src="Imagenes/CervezasArtesanales_page_4.jpg" alt="Cervezas Artesanales" loading="lazy">
                     </div>
                 </div>
 
                 <!-- Página 6: Área Cósmica -->
                 <div class="page">
                     <div class="page-content">
-                        <img src="Imagenes/AreaCosmica_page_5.jpg" alt="Área Cósmica">
+                        <img src="Imagenes/AreaCosmica_page_5.jpg" alt="Área Cósmica" loading="lazy">
                     </div>
                 </div>
 
                 <!-- Página 7: Jarras -->
                 <div class="page">
                     <div class="page-content">
-                        <img src="Imagenes/JarrasDeCerveza_page_6.jpg" alt="Jarras de Cerveza">
+                        <img src="Imagenes/JarrasDeCerveza_page_6.jpg" alt="Jarras de Cerveza" loading="lazy">
                     </div>
                 </div>
 
                 <!-- Página 8: Aguardiente -->
                 <div class="page">
                     <div class="page-content">
-                        <img src="Imagenes/Aguardiente_page_7.jpg" alt="Aguardiente">
+                        <img src="Imagenes/Aguardiente_page_7.jpg" alt="Aguardiente" loading="lazy">
                     </div>
                 </div>
 
                 <!-- Página 9: Whisky -->
                 <div class="page">
                     <div class="page-content">
-                        <img src="Imagenes/whisky_page_8.jpg" alt="Whisky">
+                        <img src="Imagenes/whisky_page_8.jpg" alt="Whisky" loading="lazy">
                     </div>
                 </div>
 
                 <!-- Página 10: Brandy / Vodka / Tequila -->
                 <div class="page">
                     <div class="page-content">
-                        <img src="Imagenes/BrandyVodkaTequila_page_9.jpg" alt="Brandy, Vodka, Tequila">
+                        <img src="Imagenes/BrandyVodkaTequila_page_9.jpg" alt="Brandy, Vodka, Tequila" loading="lazy">
                     </div>
                 </div>
 
                 <!-- Página 11: Ron -->
                 <div class="page">
                     <div class="page-content">
-                        <img src="Imagenes/Ron_page_10.jpg" alt="Ron">
+                        <img src="Imagenes/Ron_page_10.jpg" alt="Ron" loading="lazy">
                     </div>
                 </div>
 
                 <!-- Página 12: Shots -->
                 <div class="page">
                     <div class="page-content">
-                        <img src="Imagenes/Shots_page_11.jpg" alt="Shots">
+                        <img src="Imagenes/Shots_page_11.jpg" alt="Shots" loading="lazy">
                     </div>
                 </div>
 
                 <!-- Página 13: Bebidas -->
                 <div class="page">
                     <div class="page-content">
-                        <img src="Imagenes/Bebidas_page_12.jpg" alt="Bebidas">
+                        <img src="Imagenes/Bebidas_page_12.jpg" alt="Bebidas" loading="lazy">
                     </div>
                 </div>
 
                 <!-- Página 14: Varios -->
                 <div class="page">
                     <div class="page-content">
-                        <img src="Imagenes/Varios_page_13.jpg" alt="Varios">
+                        <img src="Imagenes/Varios_page_13.jpg" alt="Varios" loading="lazy">
                     </div>
                 </div>
 
                 <!-- Página 15: Nuestros Parches -->
                 <div class="page">
                     <div class="page-content">
-                        <img src="Imagenes/NuestrosParches_page_14.jpg" alt="Nuestros Parches">
+                        <img src="Imagenes/NuestrosParches_page_14.jpg" alt="Nuestros Parches" loading="lazy">
                     </div>
                 </div>
 
@@ -280,15 +280,28 @@
     <script src="script.js"></script>
     <script>
         (function () {
-            const overlay  = document.getElementById('video-intro');
-            const video    = document.getElementById('intro-video');
-            const skipBtn  = document.getElementById('skip-btn');
+            const overlay   = document.getElementById('video-intro');
+            const video     = document.getElementById('intro-video');
+            const skipBtn   = document.getElementById('skip-btn');
             const unmuteBtn = document.getElementById('unmute-btn');
+            let   stallTimer = null;
 
             function dismiss() {
+                if (stallTimer) clearTimeout(stallTimer);
                 overlay.classList.add('hidden');
                 setTimeout(() => overlay.remove(), 800);
             }
+
+            function clearStall() {
+                if (stallTimer) { clearTimeout(stallTimer); stallTimer = null; }
+            }
+
+            // Si el video se detiene esperando datos, dar 4 s antes de saltar
+            video.addEventListener('waiting', () => {
+                if (!stallTimer) stallTimer = setTimeout(dismiss, 4000);
+            });
+            video.addEventListener('playing', clearStall);
+            video.addEventListener('canplay',  clearStall);
 
             unmuteBtn.addEventListener('click', () => {
                 video.muted = !video.muted;
