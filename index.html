@@ -11,6 +11,15 @@
 </head>
 
 <body>
+
+    <!-- Overlay de video de presentación -->
+    <div id="video-intro">
+        <video id="intro-video" autoplay muted playsinline>
+            <source src="videos/The_skull_laughs.mp4" type="video/mp4">
+        </video>
+        <button id="skip-btn">Saltar ✕</button>
+    </div>
+
     <div class="book-container">
         <!-- Título principal -->
         <!-- <h1 class="pirate-title">BIENVENIDOS A BARBA BAR</h1> -->
@@ -192,6 +201,21 @@
 
     <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
     <script src="script.js"></script>
+    <script>
+        (function () {
+            const overlay = document.getElementById('video-intro');
+            const video = document.getElementById('intro-video');
+            const skipBtn = document.getElementById('skip-btn');
+
+            function dismiss() {
+                overlay.classList.add('hidden');
+                setTimeout(() => overlay.remove(), 800);
+            }
+
+            video.addEventListener('ended', dismiss);
+            skipBtn.addEventListener('click', dismiss);
+        })();
+    </script>
 </body>
 
 </html>
