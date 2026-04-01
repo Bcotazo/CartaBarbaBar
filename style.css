@@ -118,8 +118,8 @@ body {
 /* ── Escena del libro ── */
 .book-scene {
     position: relative;
-    /* Espacio para el seal-nav superior */
-    padding-top: 84px;
+    /* Espacio para el seal-nav superior (moneda 68px + label ~14px + gaps) */
+    padding-top: 106px;
 }
 
 .book {
@@ -275,7 +275,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 84px;
+    height: 106px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -284,7 +284,7 @@ body {
     padding: 0 4px;
 }
 
-/* ── Dagas de navegación ── */
+/* ── Flechas de navegación ── */
 .seal-arrow {
     flex-shrink: 0;
     width: 44px;
@@ -292,32 +292,29 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    color: #b07820;
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    padding: 0;
-    transition: color 0.2s, transform 0.2s;
+    transition: transform 0.2s, filter 0.2s;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
-    filter: drop-shadow(0 0 4px rgba(180, 120, 20, 0.35));
+    filter: drop-shadow(0 0 4px rgba(180, 120, 20, 0.4));
 }
 
-.seal-arrow svg {
-    width: 38px;
-    height: 18px;
-    transition: filter 0.2s;
+.seal-arrow img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
 }
 
 .seal-arrow:not(:disabled):hover {
-    color: #ffd700;
-    transform: scale(1.18);
-    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.65));
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.75));
 }
 
 .seal-arrow:disabled {
-    opacity: 0.18;
+    opacity: 0.2;
     cursor: default;
     pointer-events: none;
 }
@@ -325,8 +322,8 @@ body {
 /* ── Ventana del carrusel ── */
 .seal-track-wrapper {
     overflow: hidden;
-    /* 3 sellos × 68px + 2 gaps × 10px */
-    width: calc(3 * 68px + 2 * 10px);
+    /* 3 monedas × 72px + 2 gaps × 10px */
+    width: calc(3 * 72px + 2 * 10px);
     flex-shrink: 0;
 }
 
@@ -337,125 +334,102 @@ body {
     will-change: transform;
 }
 
-/* ── Sello de lacre ── */
+/* ── Botón contenedor (moneda + texto) ── */
 .seal-btn {
     flex-shrink: 0;
-    width: 68px;
-    height: 68px;
-    border-radius: 50%;
-
-    /* Cera seca: rojo carmesí profundo */
-    background: radial-gradient(circle at 38% 30%,
-        #6b1c1c 0%, #3a0808 52%, #1c0303 100%);
-
-    border: 2.5px solid rgba(140, 75, 15, 0.6);
-    color: #a06828;
-
+    width: 72px;
+    background: none;
+    border: none;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 3px;
-    font-family: 'Pirata One', cursive;
-
-    box-shadow:
-        0 3px 10px rgba(0, 0, 0, 0.75),
-        0 1px 0 rgba(255, 180, 60, 0.07) inset,
-        0 -2px 5px rgba(0, 0, 0, 0.55) inset;
-
-    position: relative;
-    overflow: hidden;
-    transition: all 0.25s ease;
+    gap: 6px;
+    padding: 0;
+    transition: transform 0.25s ease;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
 }
 
-/* Anillo interior del sello (grabado en cera) */
-.seal-btn::before {
-    content: '';
-    position: absolute;
-    inset: 5px;
+/* ── Moneda circular ── */
+.seal-coin {
+    width: 68px;
+    height: 68px;
     border-radius: 50%;
-    border: 1px solid rgba(180, 75, 15, 0.3);
-    pointer-events: none;
-    transition: border-color 0.25s;
-}
-
-/* Brillo de cera (reflejo superior) */
-.seal-btn::after {
-    content: '';
-    position: absolute;
-    top: 9px;
-    left: 15px;
-    width: 16px;
-    height: 7px;
-    border-radius: 50%;
-    background: rgba(255, 200, 120, 0.07);
-    pointer-events: none;
-    transition: background 0.25s;
-}
-
-.seal-btn:hover:not(.active) {
-    background: radial-gradient(circle at 38% 30%,
-        #8a2222 0%, #4d0c0c 52%, #250505 100%);
-    border-color: rgba(200, 110, 25, 0.85);
-    color: #c88030;
-    transform: translateY(-3px) scale(1.05);
+    overflow: hidden;
+    border: 2.5px solid rgba(140, 75, 15, 0.55);
     box-shadow:
-        0 7px 16px rgba(0, 0, 0, 0.8),
-        0 1px 0 rgba(255, 180, 60, 0.1) inset,
-        0 -2px 5px rgba(0, 0, 0, 0.55) inset;
+        0 3px 10px rgba(0, 0, 0, 0.8),
+        0 0 0 1px rgba(0, 0, 0, 0.4);
+    transition: all 0.25s ease;
+    flex-shrink: 0;
 }
 
-/* Sello activo: oro fundido */
-.seal-btn.active {
-    background: radial-gradient(circle at 38% 30%,
-        #e8c547 0%, #b08818 45%, #6c5210 72%, #3a2c00 100%);
+.seal-coin img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.75;
+    transition: opacity 0.25s;
+}
+
+.seal-btn:hover:not(.active) .seal-coin {
+    border-color: rgba(200, 140, 30, 0.85);
+    box-shadow:
+        0 6px 16px rgba(0, 0, 0, 0.85),
+        0 0 0 1px rgba(200, 140, 30, 0.3);
+    transform: translateY(-2px) scale(1.05);
+}
+
+.seal-btn:hover:not(.active) .seal-coin img {
+    opacity: 0.95;
+}
+
+/* Moneda activa: resplandor dorado */
+.seal-btn.active .seal-coin {
     border-color: #ffd700;
-    color: #1a0c00;
-
-    transform: translateY(-3px) scale(1.12);
-
+    border-width: 2.5px;
     box-shadow:
-        0 0 0 2.5px rgba(255, 215, 0, 0.22),
-        0 0 18px rgba(212, 175, 55, 0.8),
-        0 0 36px rgba(212, 175, 55, 0.28),
-        0 5px 14px rgba(0, 0, 0, 0.65),
-        0 1px 0 rgba(255, 245, 160, 0.3) inset;
+        0 0 0 2px rgba(255, 215, 0, 0.3),
+        0 0 16px rgba(212, 175, 55, 0.85),
+        0 0 32px rgba(212, 175, 55, 0.3),
+        0 4px 12px rgba(0, 0, 0, 0.7);
+    transform: translateY(-3px) scale(1.1);
 }
 
-.seal-btn.active::before {
-    border-color: rgba(255, 225, 80, 0.45);
+.seal-btn.active .seal-coin img {
+    opacity: 1;
 }
 
-.seal-btn.active::after {
-    background: rgba(255, 252, 200, 0.14);
-}
-
-.seal-icon {
-    font-size: 1.55rem;
-    line-height: 1;
-    transition: transform 0.25s;
-}
-
-.seal-btn:hover .seal-icon,
-.seal-btn.active .seal-icon {
-    transform: scale(1.1);
-}
-
+/* ── Etiqueta de texto ── */
 .seal-label {
-    font-size: 0.44rem;
-    letter-spacing: 0.9px;
+    font-family: 'Pirata One', cursive;
+    font-size: 0.72rem;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
+    color: #c09040;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
     line-height: 1;
-    font-weight: normal;
+    white-space: nowrap;
+    transition: color 0.25s;
 }
 
-/* Desktop: mostrar los 5 sellos sin carrusel */
+.seal-btn.active .seal-label {
+    color: #ffd700;
+    text-shadow:
+        0 0 10px rgba(212, 175, 55, 0.8),
+        0 1px 4px rgba(0, 0, 0, 0.95);
+}
+
+.seal-btn:hover:not(.active) .seal-label {
+    color: #d4a840;
+}
+
+/* Desktop: mostrar los 5 monedas sin carrusel */
 @media (min-width: 520px) {
     .seal-track-wrapper {
-        width: calc(5 * 68px + 4 * 10px);
+        width: calc(5 * 72px + 4 * 10px);
     }
     .seal-arrow {
         visibility: hidden;

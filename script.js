@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function () {
         [14, 15, 16, 17]        // ☠  Parches + Redes + Frase + Contratapa
     ];
 
-    const SEAL_STEP  = 78;  // 68px sello + 10px gap
+    const SEAL_STEP  = 82;  // 72px moneda + 10px gap
     const MAX_OFFSET = Math.max(0, sealBtns.length - 3);
     let   sealOffset = 0;
 
