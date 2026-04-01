@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let h = w * ratio;
             return { width: Math.floor(w), height: Math.floor(h), portrait: true };
         } else {
-            const availW = vw - 80 - 82; // 82px reservados para tabs laterales
+            const availW = vw - 80 - 114; // 114px reservados para tabs laterales
             const availH = vh - 130;     // controles + padding
             let pageW = Math.min(Math.floor(availW / 2), 450);
             let pageH = Math.min(Math.floor(pageW * ratio), availH);
