@@ -24,6 +24,26 @@
     display: block;
 }
 
+#unmute-btn {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #ffd700;
+    border: 1px solid #ffd700;
+    padding: 8px 14px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    border-radius: 4px;
+    z-index: 10000;
+    transition: background 0.2s;
+    line-height: 1;
+}
+
+#unmute-btn:hover {
+    background: rgba(139, 90, 43, 0.8);
+}
+
 #skip-btn {
     position: absolute;
     top: 16px;

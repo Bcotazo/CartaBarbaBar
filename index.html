@@ -17,9 +17,10 @@
 
     <!-- Overlay de video de presentación -->
     <div id="video-intro">
-        <video id="intro-video" autoplay muted playsinline>
+        <video id="intro-video" autoplay muted playsinline preload="auto">
             <source src="videos/The_skull_laughs.mp4" type="video/mp4">
         </video>
+        <button id="unmute-btn" title="Activar sonido">🔇</button>
         <button id="skip-btn">Saltar ✕</button>
     </div>
 
@@ -240,14 +241,20 @@
     <script src="script.js"></script>
     <script>
         (function () {
-            const overlay = document.getElementById('video-intro');
-            const video = document.getElementById('intro-video');
-            const skipBtn = document.getElementById('skip-btn');
+            const overlay  = document.getElementById('video-intro');
+            const video    = document.getElementById('intro-video');
+            const skipBtn  = document.getElementById('skip-btn');
+            const unmuteBtn = document.getElementById('unmute-btn');
 
             function dismiss() {
                 overlay.classList.add('hidden');
                 setTimeout(() => overlay.remove(), 800);
             }
+
+            unmuteBtn.addEventListener('click', () => {
+                video.muted = !video.muted;
+                unmuteBtn.textContent = video.muted ? '🔇' : '🔊';
+            });
 
             video.addEventListener('ended', () => setTimeout(dismiss, 1500));
             skipBtn.addEventListener('click', dismiss);
