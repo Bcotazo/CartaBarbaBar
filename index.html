@@ -20,7 +20,7 @@
         <video id="intro-video" autoplay muted playsinline preload="auto">
             <source src="videos/The_skull_laughs.mp4" type="video/mp4">
         </video>
-        <button id="unmute-btn" title="Activar sonido">🔇</button>
+        <button id="unmute-btn" title="Activar sonido">☠</button>
         <button id="skip-btn">Saltar ✕</button>
     </div>
 
@@ -253,7 +253,7 @@
 
             unmuteBtn.addEventListener('click', () => {
                 video.muted = !video.muted;
-                unmuteBtn.textContent = video.muted ? '🔇' : '🔊';
+                unmuteBtn.textContent = video.muted ? '☠' : '♪';
             });
 
             video.addEventListener('ended', () => setTimeout(dismiss, 1500));

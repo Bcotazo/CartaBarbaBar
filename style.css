@@ -26,22 +26,33 @@
 
 #unmute-btn {
     position: absolute;
-    bottom: 16px;
-    right: 16px;
-    background: rgba(0, 0, 0, 0.6);
-    color: #ffd700;
-    border: 1px solid #ffd700;
-    padding: 8px 14px;
-    font-size: 1.4rem;
-    cursor: pointer;
-    border-radius: 4px;
-    z-index: 10000;
-    transition: background 0.2s;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle at 40% 35%, #3a1a05 0%, #0d0500 100%);
+    color: #d4af37;
+    border: 2px solid #d4af37;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    font-family: 'Pirata One', cursive;
+    font-size: 1.6rem;
     line-height: 1;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 14px rgba(212, 175, 55, 0.45),
+                inset 0 0 10px rgba(0, 0, 0, 0.6);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.9);
+    transition: box-shadow 0.2s, transform 0.2s;
 }
 
 #unmute-btn:hover {
-    background: rgba(139, 90, 43, 0.8);
+    box-shadow: 0 0 22px rgba(212, 175, 55, 0.75),
+                inset 0 0 10px rgba(0, 0, 0, 0.6);
+    transform: translateX(-50%) scale(1.08);
 }
 
 #skip-btn {
