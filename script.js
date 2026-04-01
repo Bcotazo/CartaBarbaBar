@@ -281,11 +281,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }, { passive: true });
 
-    // ── Botones de redes sociales (PageFlip bloquea <a>, usamos data-href) ──
-    document.querySelectorAll('.social-btn[data-href]').forEach(btn => {
-        btn.addEventListener('mousedown', e => e.stopPropagation());
-        btn.addEventListener('touchstart', e => e.stopPropagation(), { passive: true });
-        btn.addEventListener('click', () => window.open(btn.dataset.href, '_blank', 'noopener'));
-    });
+    // ── Botones de redes sociales ──
+    // PageFlip clona los elementos del DOM, por eso los listeners por elemento no funcionan.
+    // Usamos delegación en document con capture:true para interceptar ANTES que PageFlip.
+    document.addEventListener('mousedown', e => {
+        if (e.target.closest('.social-btn[data-href]')) e.stopPropagation();
+    }, true);
+    document.addEventListener('touchstart', e => {
+        if (e.target.closest('.social-btn[data-href]')) e.stopPropagation();
+    }, { capture: true, passive: true });
+    document.addEventListener('click', e => {
+        const btn = e.target.closest('.social-btn[data-href]');
+        if (btn) { e.stopPropagation(); window.open(btn.dataset.href, '_blank', 'noopener'); }
+    }, true);
 
 });
