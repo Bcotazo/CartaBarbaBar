@@ -48,47 +48,60 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'IM Fell English SC', serif;
 }
 
 body {
-    background-color: #1a1a1a;
-    background-image: radial-gradient(circle at center, #3b2818 0%, #120a05 100%);
+    background: radial-gradient(ellipse at 50% 35%, #0d0d1a 0%, #000000 75%);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    min-height: 100dvh;
     overflow: hidden;
     color: #e5d3b3;
+    font-family: 'IM Fell English SC', serif;
 }
 
+/* ── Lightning canvas ── */
+#lightning-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ── Contenedor principal ── */
 .book-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    z-index: 2;
+    padding: 14px;
+    gap: 14px;
     width: 100%;
-    padding: 20px;
 }
 
-.pirate-title {
-    font-family: 'Pirata One', cursive;
-    font-size: 3.5rem;
-    color: #d4af37;
-    margin-bottom: 30px;
-    text-shadow: 2px 2px 4px #000;
-    letter-spacing: 2px;
+/* ── Escena del libro ── */
+.book-scene {
+    position: relative;
+    /* Móvil: espacio para tabs superiores (base mobile-first) */
+    padding-top: 52px;
 }
 
 .book {
-    width: 400px;
-    height: 600px;
+    flex-shrink: 0;
+    touch-action: none;
 }
 
+/* ── Páginas ── */
 .page {
     background-color: #e5d3b3;
     background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
-    border: 1px solid #4a3219; /* Borde sutil para simular filo de papel viejo */
-    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5); /* Sombra interna para aspecto viejo */
+    border: 1px solid #4a3219;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
     overflow: hidden;
 }
 
@@ -101,12 +114,22 @@ body {
     position: relative;
 }
 
+/* CORRECCIÓN PRINCIPAL: contain muestra la imagen completa sin recortar */
 .page-content img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     object-position: center;
-    pointer-events: none; /* previene problemas de drag en la imagen al tirar de la esquina */
+    pointer-events: none;
+}
+
+/* Las imágenes de portada/fondo mantienen su comportamiento original */
+.page-content .book-cover-bg {
+    object-fit: fill; /* portadas deben llenar todo el espacio */
+}
+
+.page-content .logo-fondo-marca {
+    object-fit: cover; /* overlay de logo: cubrir el área completa */
 }
 
 .parchment {
@@ -117,151 +140,71 @@ body {
     padding: 20px;
 }
 
+/* ── Tipografía ── */
+.pirate-title {
+    font-family: 'Pirata One', cursive;
+    font-size: clamp(1.3rem, 4.5vw, 3rem);
+    color: #4a3219;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.4);
+    margin-bottom: 14px;
+}
+
 .end-text {
     font-family: 'Pirata One', cursive;
-    font-size: 2.5rem;
+    font-size: clamp(1rem, 3.5vw, 2.5rem);
     color: #4a3219;
+    line-height: 1.4;
 }
 
-.controls {
-    margin-top: 40px;
-    display: flex;
-    gap: 20px;
-}
-
-.pirate-btn {
-    background-color: #8b5a2b;
-    background-image: linear-gradient(to bottom, #8b5a2b, #5c3a21);
-    color: #ffd700;
-    border: 2px solid #3e2723;
-    padding: 10px 20px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: all 0.2s;
-    font-family: 'Pirata One', cursive;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-    text-shadow: 1px 1px 2px #000;
-}
-
-.pirate-btn:hover {
-    background-color: #a06e3b;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.6);
-}
-
-.pirate-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-/* Ajustes Responsivos */
-@media (min-width: 800px) {
-    .book {
-        width: 400px;
-        height: 600px;
-        /* Cuando estamos en PC, abrimos el libro al centro */
-    }
-}
-
-/* --- Efecto de Portada Antigua --- */
-#f1 {
-    position: relative;
-}
-
+/* ── Portadas ── */
 .book-cover-bg {
     width: 100%;
     height: 100%;
-    object-fit: fill;
-    /* fill asegura que la imagen se estire y encaje perfectamente viéndose entera */
+    object-fit: fill; /* las portadas sí deben llenar completamente */
     filter: contrast(1.1) brightness(0.9);
 }
 
-/* Información del bar sobre el libro */
 .cover-info-overlay {
     position: absolute;
-    top: auto;
-    bottom: 18%;
     left: 0;
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
     text-align: center;
-    z-index: 1;
-    padding: 20px;
+    z-index: 3;
+    padding: 12px;
     color: #e5c158;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.9);
 }
 
-.logo-encima {
-    width: 90px;
-    height: 90px;
-    object-fit: cover;
-    border-radius: 50%;
-    
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
-    border: 3px solid rgba(229, 193, 88, 0.8);
-
-    position: absolute;
-    top: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-}
-
 .logo-fondo-marca {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     object-fit: cover;
-    opacity: 0.6; /* Lo suficientemente visible como para verse como la portada, pero permite leer el fuego y PIRATA CODEX bajo él */
-    mix-blend-mode: overlay; /* Permite que el logo se bañe e integre con los tonos de la madera y el fuego debajo */
+    mix-blend-mode: overlay;
     pointer-events: none;
-    z-index: 2; /* Sobre las llamas pero bajo la información */
-}
-
-.bar-logo {
-    width: 70%;
-    /* Escala la imagen del logo */
-    max-height: 50%;
-    object-fit: contain;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
-    border: 2px solid rgba(229, 193, 88, 0.5);
-    /* Borde dorado tenue */
-    /* mix-blend-mode: multiply; Opcional si el logo tiene fondo blanco o feo que opaque el fuego */
-}
-
-.bar-title {
-    font-family: 'Pirata One', cursive;
-    font-size: 3.5rem;
-    margin-bottom: 20px;
-    letter-spacing: 2px;
+    z-index: 2;
 }
 
 .location-info {
     font-family: 'IM Fell English SC', serif;
-    font-size: 0.85rem;
+    font-size: clamp(0.58rem, 1.6vw, 0.85rem);
     font-weight: bold;
-    background-color: rgba(20, 10, 0, 0.85); /* Un poco más oscuro para asegurar legibilidad al ser más pequeño */
-    padding: 6px 10px; /* Menos relleno para achicar la caja */
+    background-color: rgba(20, 10, 0, 0.87);
+    padding: 5px 10px;
     border: 1px solid #e5c158;
     border-radius: 6px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
-    line-height: 1.2; /* Menor interlineado */
+    line-height: 1.35;
 }
 
-/* Efecto animado de parpadeo de Fuego para complementar la imagen */
+/* ── Efecto fuego ── */
 .fire-flames {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    bottom: 0; left: 0;
+    width: 100%; height: 100%;
     pointer-events: none;
     z-index: 2;
     background: radial-gradient(circle at bottom, rgba(255, 100, 0, 0.4) 0%, transparent 60%);
@@ -270,29 +213,333 @@ body {
 }
 
 @keyframes fire-flicker {
-
-    0%,
-    100% {
+    0%, 100% {
         opacity: 0.8;
         box-shadow: inset 0 -30px 50px rgba(255, 69, 0, 0.6);
         background: radial-gradient(circle at bottom, rgba(255, 100, 0, 0.5) 0%, transparent 60%);
     }
-
     25% {
         opacity: 1;
         box-shadow: inset 0 -50px 70px rgba(255, 30, 0, 0.8);
         background: radial-gradient(circle at bottom, rgba(255, 80, 0, 0.6) 0%, transparent 65%);
     }
-
     50% {
         opacity: 0.9;
         box-shadow: inset 0 -45px 60px rgba(255, 140, 0, 0.7);
         background: radial-gradient(circle at bottom, rgba(255, 120, 0, 0.7) 0%, transparent 55%);
     }
-
     75% {
         opacity: 0.7;
         box-shadow: inset 0 -35px 45px rgba(255, 40, 0, 0.5);
         background: radial-gradient(circle at bottom, rgba(255, 90, 0, 0.4) 0%, transparent 50%);
+    }
+}
+
+/* ══════════════════════════════════════════════════
+   SEPARADORES TIPO CUADERNO — borde superior del libro
+   ══════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════
+   TABS – BASE MOBILE (parte superior, texto vertical)
+   ══════════════════════════════════════════════════ */
+.book-tabs {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;          /* 52px visibles + 8px dentro del libro */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-around;
+    gap: 2px;
+    padding: 0 4px;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.book-tab {
+    pointer-events: all;
+    position: relative;
+    flex: 1;
+    min-width: 20px;
+    max-width: 28px;       /* ← estrecho para no desperdiciar espacio horizontal */
+    height: 60px;
+
+    /* Texto vertical de abajo hacia arriba */
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+
+    /* Cuero envejecido */
+    background: linear-gradient(to bottom, #4a2208 0%, #6b3310 50%, #3a1805 100%);
+    color: #d4a020;
+    font-family: 'Pirata One', cursive;
+    font-size: 0.55rem;    /* ← más grande y legible */
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+
+    border-radius: 0 0 5px 5px;
+    border: 1px solid #8a5818;
+    border-top: 3px solid #b07820;
+    border-bottom: none;
+
+    cursor: pointer;
+    padding: 4px 2px 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+    box-shadow:
+        -1px -2px 5px rgba(0, 0, 0, 0.5),
+        1px 0 3px rgba(0, 0, 0, 0.4),
+        inset 0 2px 0 rgba(200, 150, 40, 0.15);
+
+    transition: height 0.16s ease, background 0.16s ease, color 0.16s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+/* Textura de cuero */
+.book-tab::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0px, transparent 5px,
+        rgba(0, 0, 0, 0.05) 5px, rgba(0, 0, 0, 0.05) 6px
+    );
+    pointer-events: none;
+}
+
+.book-tab:hover {
+    background: linear-gradient(to bottom, #6b3810 0%, #9a5020 50%, #5a2a0a 100%);
+    color: #ffd700;
+    height: 66px;
+    border-top-color: #ffd700;
+}
+
+.book-tab:active { height: 56px; }
+
+.book-tab.active {
+    background: linear-gradient(to bottom, #7a4215 0%, #b06025 50%, #6a3010 100%);
+    color: #ffd700;
+    border-top-color: #ffd700;
+    height: 64px;
+    box-shadow:
+        -1px -3px 7px rgba(0, 0, 0, 0.5),
+        inset 0 2px 0 rgba(255, 220, 80, 0.3),
+        0 0 8px rgba(200, 150, 0, 0.25);
+}
+
+/* ══════════════════════════════════════════════════
+   TABS – DESKTOP (lateral derecho, aparecen al abrir)
+   ══════════════════════════════════════════════════ */
+@media (min-width: 768px) {
+    .book-tabs {
+        /* Reubicar: borde derecho del libro, disposición vertical */
+        top: 0;
+        left: 100%;        /* empieza en el borde derecho del libro */
+        width: 110px;
+        height: 100%;
+        flex-direction: column;
+        justify-content: stretch;
+        align-items: flex-start;
+        gap: 2px;
+        padding: 4px 0;
+
+        /* Oculto por defecto — aparece cuando el libro está abierto */
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Visible cuando el libro está abierto (no en portada) */
+    .book-scene.book-open .book-tabs {
+        opacity: 1;
+        pointer-events: all;
+        transform: translateX(0);
+    }
+
+    /* Resetear el estilo vertical y aplicar horizontal para derecha */
+    .book-tab {
+        writing-mode: horizontal-tb;
+        text-orientation: initial;
+        transform: none;
+        flex: 1;
+        min-width: 0;
+        max-width: none;
+        width: 108px;
+        height: auto;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+
+        border-radius: 0 6px 6px 0;
+        border: 1px solid #8a5818;
+        border-left: 4px solid #b07820;
+        border-top: 1px solid #8a5818;
+        border-bottom: 1px solid #8a5818;
+
+        padding: 0 8px 0 6px;
+        display: flex;
+        align-items: center;
+    }
+
+    .book-tab:hover {
+        transform: translateX(6px);
+        height: auto;
+        border-left-color: #ffd700;
+        color: #ffd700;
+    }
+
+    .book-tab:active { transform: translateX(3px); }
+
+    .book-tab.active {
+        height: auto;
+        border-left-color: #ffd700;
+        color: #ffd700;
+        background: linear-gradient(to right, #5c2e10 0%, #9b5c2a 60%, #7a4218 100%);
+    }
+}
+
+/* ── Controles de navegación ── */
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.pirate-btn {
+    /* Madera quemada / cuero viejo */
+    background: linear-gradient(155deg,
+        #120500 0%,
+        #3d1500 20%,
+        #5c2208 45%,
+        #3a1200 70%,
+        #180600 100%
+    );
+    color: #c87800;
+    border: none;
+    /* Borde rugoso multicapa */
+    outline: 1px solid #4a1e00;
+    outline-offset: 2px;
+    box-shadow:
+        inset 0 2px 3px rgba(210, 120, 20, 0.18),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.65),
+        inset 2px 0 4px rgba(0, 0, 0, 0.25),
+        inset -2px 0 4px rgba(0, 0, 0, 0.25),
+        0 4px 12px rgba(0, 0, 0, 0.85),
+        0 0 18px rgba(140, 60, 0, 0.18),
+        3px 5px 10px rgba(0, 0, 0, 0.9);
+    /* Bordes ligeramente irregulares = tallado a mano */
+    border-radius: 4px 8px 5px 7px / 7px 5px 8px 4px;
+    padding: 11px 24px;
+    font-size: clamp(0.85rem, 2.2vw, 1.12rem);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Pirata One', cursive;
+    letter-spacing: 2px;
+    text-shadow:
+        0 0 10px rgba(220, 130, 0, 0.75),
+        0 0 3px rgba(255, 160, 0, 0.4),
+        1px 1px 3px rgba(0, 0, 0, 0.95);
+    min-height: 44px;
+    min-width: 100px;
+    position: relative;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+/* Veta de madera / textura de cuero */
+.pirate-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        repeating-linear-gradient(
+            22deg,
+            transparent 0px, transparent 4px,
+            rgba(0, 0, 0, 0.04) 4px, rgba(0, 0, 0, 0.04) 5px
+        );
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+/* Arañazo / reflejo de brasa */
+.pirate-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(72deg, transparent 38%, rgba(255, 140, 20, 0.07) 39%, transparent 41%),
+        linear-gradient(130deg, transparent 58%, rgba(255, 100, 0, 0.05) 59%, transparent 61%);
+    pointer-events: none;
+}
+
+.pirate-btn:hover {
+    color: #ff9a00;
+    background: linear-gradient(155deg,
+        #1e0800 0%,
+        #5c2008 20%,
+        #7a3010 45%,
+        #521a04 70%,
+        #240a00 100%
+    );
+    box-shadow:
+        inset 0 2px 4px rgba(255, 150, 30, 0.22),
+        inset 0 -3px 7px rgba(0, 0, 0, 0.7),
+        0 6px 16px rgba(0, 0, 0, 0.9),
+        0 0 24px rgba(180, 80, 0, 0.32),
+        3px 5px 12px rgba(0, 0, 0, 0.9);
+    text-shadow:
+        0 0 14px rgba(255, 160, 0, 0.9),
+        0 0 5px rgba(255, 200, 0, 0.5),
+        1px 1px 3px rgba(0, 0, 0, 0.95);
+    transform: translateY(-2px);
+}
+
+.pirate-btn:active {
+    transform: translateY(1px);
+    box-shadow:
+        inset 0 4px 8px rgba(0, 0, 0, 0.75),
+        0 2px 5px rgba(0, 0, 0, 0.85);
+}
+
+.page-counter {
+    font-family: 'Pirata One', cursive;
+    color: #d4af37;
+    font-size: clamp(0.78rem, 2.2vw, 1rem);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9), 0 0 8px rgba(212, 175, 55, 0.35);
+    min-width: 60px;
+    text-align: center;
+    white-space: nowrap;
+    letter-spacing: 1px;
+}
+
+/* ── Desktop ── */
+@media (min-width: 768px) {
+    .book-scene {
+        padding-top: 0;        /* sin tabs arriba */
+        margin-right: 114px;   /* espacio para tabs laterales */
+        filter: drop-shadow(0 0 35px rgba(80, 40, 0, 0.45))
+                drop-shadow(0 20px 50px rgba(0, 0, 0, 0.9));
+    }
+}
+
+/* ── Móvil ── */
+@media (max-width: 767px) {
+    .book-container {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .pirate-btn {
+        padding: 10px 14px;
+        min-width: 88px;
     }
 }
